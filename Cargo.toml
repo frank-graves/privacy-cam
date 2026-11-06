@@ -1,0 +1,63 @@
+[package]
+name = "privacy-cam"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75" # Mínimo recomendado para las dependencias
+
+[dependencies]
+# --- Interfaz Gráfica (GUI) ---
+# eframe + egui: La base de la interfaz. Se usa la versión más reciente estable.
+eframe = "0.37"
+egui = "0.37"
+
+# --- Captura de Cámara ---
+# nokhwa: Abstracción multiplataforma para webcams.
+# 'input-native' usa los backends nativos (Media Foundation en Windows).
+nokhwa = { version = "0.10.11", features = ["input-native"] }
+
+# --- Salida a Cámara Virtual (OBS) ---
+# virtualcam: Crea un dispositivo de video virtual.
+virtualcam = "1.0.0"
+
+# --- Inferencia de IA (ONNX Runtime) ---
+# ort: Binding seguro para ONNX Runtime. La versión 2.0.0-rc es la que soporta
+# las versiones más recientes de ONNX Runtime. Si prefieres estabilidad total,
+# puedes bajar a "1.16" (pero puede requerir ONNX Runtime más antiguo).
+ort = { version = "2.0.0-rc.14", features = ["load-dynamic"] }
+
+# --- Procesamiento de Imagen y Video ---
+image = "0.24" # Para conversiones de formato y operaciones básicas.
+fast_image_resize = "5.1" # Resize rápido para preparar el input del modelo.
+
+# --- Matemáticas (Similitud Coseno para Perfiles) ---
+nalgebra = "0.35"
+
+# --- Concurrencia y Canales entre Hilos ---
+crossbeam-channel = "0.5" # Canales seguros y de alto rendimiento.
+
+# --- Serialización (Guardar perfiles y configuración) ---
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.8" # Para el archivo config/settings.toml
+
+# --- Manejo de Errores ---
+anyhow = "1.0" # Para errores en la lógica de aplicación.
+thiserror = "2.0" # Para errores personalizados en librerías/módulos.
+
+# --- Utilidades ---
+log = "0.4"
+env_logger = "0.11" # Para ver logs en la consola.
+parking_lot = "0.12" # Mutex/RwLock más rápidos que los de std.
+
+[profile.release]
+# Optimización agresiva para la app final. El tiempo de compilación aumenta,
+# pero el rendimiento en tiempo real es crítico.
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort" # Reduce el tamaño del binario y mejora el rendimiento.
+strip = true # Elimina símbolos de depuración del binario final.
+
+[features]
+# Puedes definir features opcionales aquí en el futuro (ej. "gpu" para CUDA).
+default = []

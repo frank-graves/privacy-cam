@@ -1,0 +1,34 @@
+# --- Rust / Cargo ---
+# Archivos generados por Cargo
+/target
+**/*.rs.bk
+Cargo.lock # Si es una aplicación binaria, normalmente SÍ se sube.
+           # Si prefieres no versionarlo, descomenta esta línea.
+           # Para este proyecto (app de escritorio), se recomienda versionarlo.
+
+# --- Archivos de configuración local y secretos ---
+# Evita subir configuraciones personales o perfiles faciales reales.
+config/settings.toml
+profiles/
+*.db
+*.sqlite
+
+# --- Modelos de IA (son pesados, mejor gestionarlos aparte) ---
+assets/models/*.onnx
+assets/models/*.pt
+
+# --- Sistema Operativo ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- IDEs / Editores ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Logs y temporales ---
+*.log
+temp/
+tree.txt
