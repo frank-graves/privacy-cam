@@ -9,6 +9,7 @@ rust-version = "1.75" # Mínimo recomendado para las dependencias
 # eframe + egui: La base de la interfaz. Se usa la versión más reciente estable.
 eframe = "0.37"
 egui = "0.37"
+clap = { version = "4.5", features = ["derive"] }
 
 # --- Captura de Cámara ---
 # nokhwa: Abstracción multiplataforma para webcams.
@@ -43,11 +44,36 @@ toml = "0.8" # Para el archivo config/settings.toml
 # --- Manejo de Errores ---
 anyhow = "1.0" # Para errores en la lógica de aplicación.
 thiserror = "2.0" # Para errores personalizados en librerías/módulos.
+ctrlc = "3.4" #ctrl+c: para el apagado seguro
 
 # --- Utilidades ---
 log = "0.4"
 env_logger = "0.11" # Para ver logs en la consola.
 parking_lot = "0.12" # Mutex/RwLock más rápidos que los de std.
+
+# Concurrencia y CLI
+clap = { version = "4.5", features = ["derive"] }
+crossbeam-channel = "0.5"
+ctrlc = "3.4"
+anyhow = "1.0"
+log = "0.4"
+env_logger = "0.11"
+parking_lot = "0.12"
+
+# Serialización (para state.rs)
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Video y UI (las añadiremos pronto, pero puedes dejarlas ya)
+image = "0.24"
+# eframe = "0.37"
+# egui = "0.37"
+# nokhwa = { version = "0.10.11", features = ["input-native"] }
+# virtualcam = "1.0.0"
+# ort = { version = "2.0.0-rc.14", features = ["load-dynamic"] }
+# nalgebra = "0.35"
+# fast_image_resize = "5.1"
+# thiserror = "2.0"
 
 [profile.release]
 # Optimización agresiva para la app final. El tiempo de compilación aumenta,
