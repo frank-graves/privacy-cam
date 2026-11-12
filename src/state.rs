@@ -1,4 +1,5 @@
 use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
 use parking_lot::RwLock;
 use serde::{Deserialize, Serialize};
 
@@ -29,7 +30,7 @@ impl Default for AppConfig {
     fn default() -> Self {
         Self {
             censor_mode: CensorMode::All,
-            fail_safe_timeout_ms: 200, // 200ms es un buen límite para video en tiempo real
+            fail_safe_timeout_ms: 200,
             blur_strength: 15.0,
             require_manual_resume: false,
         }
@@ -61,6 +62,7 @@ struct InternalState {
 #[derive(Clone)]
 pub struct SharedState {
     inner: Arc<RwLock<InternalState>>,
+    is_running: Arc<AtomicBool>,
 }
 
 impl SharedState {
@@ -71,7 +73,19 @@ impl SharedState {
                 current_state: AppState::Normal,
                 config,
             })),
+            is_running: Arc::new(AtomicBool::new(true)),
         }
+    }
+
+    /// Comprueba si la aplicación debe seguir corriendo.
+    pub fn is_running(&self) -> bool {
+        self.is_running.load(Ordering::Relaxed)
+    }
+
+    /// Inicia el proceso de apagado seguro.
+    pub fn stop(&self) {
+        self.is_running.store(false, Ordering::Relaxed);
+        self.set_state(AppState::Shutdown);
     }
 
     /// Obtiene el estado actual.
@@ -82,7 +96,6 @@ impl SharedState {
     /// Cambia el estado de la aplicación (ej. de Normal a Freeze).
     pub fn set_state(&self, new_state: AppState) {
         let mut inner = self.inner.write();
-        // Si el estado cambia, lo registramos (útil para la UI y logs)
         if inner.current_state != new_state {
             inner.current_state = new_state;
         }

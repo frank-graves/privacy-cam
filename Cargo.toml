@@ -5,85 +5,51 @@ edition = "2021"
 rust-version = "1.75" # Mínimo recomendado para las dependencias
 
 [dependencies]
-# --- Interfaz Gráfica (GUI) ---
-# eframe + egui: La base de la interfaz. Se usa la versión más reciente estable.
-eframe = "0.37"
-egui = "0.37"
+# --- CLI y Utilidades Base ---
 clap = { version = "4.5", features = ["derive"] }
-
-# --- Captura de Cámara ---
-# nokhwa: Abstracción multiplataforma para webcams.
-# 'input-native' usa los backends nativos (Media Foundation en Windows).
-nokhwa = { version = "0.10.11", features = ["input-native"] }
-
-# --- Salida a Cámara Virtual (OBS) ---
-# virtualcam: Crea un dispositivo de video virtual.
-virtualcam = "1.0.0"
-
-# --- Inferencia de IA (ONNX Runtime) ---
-# ort: Binding seguro para ONNX Runtime. La versión 2.0.0-rc es la que soporta
-# las versiones más recientes de ONNX Runtime. Si prefieres estabilidad total,
-# puedes bajar a "1.16" (pero puede requerir ONNX Runtime más antiguo).
-ort = { version = "2.0.0-rc.14", features = ["load-dynamic"] }
-
-# --- Procesamiento de Imagen y Video ---
-image = "0.24" # Para conversiones de formato y operaciones básicas.
-fast_image_resize = "5.1" # Resize rápido para preparar el input del modelo.
-
-# --- Matemáticas (Similitud Coseno para Perfiles) ---
-nalgebra = "0.35"
-
-# --- Concurrencia y Canales entre Hilos ---
-crossbeam-channel = "0.5" # Canales seguros y de alto rendimiento.
-
-# --- Serialización (Guardar perfiles y configuración) ---
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-toml = "0.8" # Para el archivo config/settings.toml
-
-# --- Manejo de Errores ---
-anyhow = "1.0" # Para errores en la lógica de aplicación.
-thiserror = "2.0" # Para errores personalizados en librerías/módulos.
-ctrlc = "3.4" #ctrl+c: para el apagado seguro
-
-# --- Utilidades ---
-log = "0.4"
-env_logger = "0.11" # Para ver logs en la consola.
-parking_lot = "0.12" # Mutex/RwLock más rápidos que los de std.
-
-# Concurrencia y CLI
-clap = { version = "4.5", features = ["derive"] }
-crossbeam-channel = "0.5"
-ctrlc = "3.4"
 anyhow = "1.0"
 log = "0.4"
 env_logger = "0.11"
+ctrlc = "3.4"
+
+# --- Concurrencia y Estado ---
+crossbeam-channel = "0.5"
 parking_lot = "0.12"
 
-# Serialización (para state.rs)
+# --- Serialización (Config y Perfiles) ---
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+toml = "0.8"
 
-# Video y UI (las añadiremos pronto, pero puedes dejarlas ya)
-image = "0.24"
-# eframe = "0.37"
-# egui = "0.37"
-# nokhwa = { version = "0.10.11", features = ["input-native"] }
-# virtualcam = "1.0.0"
-# ort = { version = "2.0.0-rc.14", features = ["load-dynamic"] }
-# nalgebra = "0.35"
-# fast_image_resize = "5.1"
-# thiserror = "2.0"
+# --- Procesamiento de Imagen y Matemáticas ---
+image = "0.25"
+fast_image_resize = "5.1"
+nalgebra = "0.35"
+
+# --- Interfaz Gráfica (GUI) ---
+eframe = { version = "0.37", default-features = false, features = ["glow", "default_fonts"] }
+egui = "0.37"
+
+# --- Captura y Salida de Video ---
+nokhwa = { version = "0.10.11", features = ["input-native"] }
+virtualcam = "1.0.0"
+
+# --- Inferencia de IA (ONNX Runtime) ---
+ort = { version = "=2.0.0-rc.14", features = ["load-dynamic"] }
+
+# --- Manejo de Errores ---
+thiserror = "2.0"
 
 [profile.release]
-# Optimización agresiva para la app final. El tiempo de compilación aumenta,
-# pero el rendimiento en tiempo real es crítico.
 opt-level = 3
 lto = true
 codegen-units = 1
-panic = "abort" # Reduce el tamaño del binario y mejora el rendimiento.
-strip = true # Elimina símbolos de depuración del binario final.
+panic = "unwind"
+strip = true
+
+# Optimiza las dependencias (image, ort, etc.) incluso en builds debug
+[profile.dev.package."*"]
+opt-level = 3
 
 [features]
-# Puedes definir features opcionales aquí en el futuro (ej. "gpu" para CUDA).
 default = []

@@ -1,15 +1,11 @@
 # --- Rust / Cargo ---
-# Archivos generados por Cargo
 /target
 **/*.rs.bk
-Cargo.lock # Si es una aplicación binaria, normalmente SÍ se sube.
-           # Si prefieres no versionarlo, descomenta esta línea.
-           # Para este proyecto (app de escritorio), se recomienda versionarlo.
+# Cargo.lock (Comentario en línea propia)
 
-# --- Archivos de configuración local y secretos ---
-# Evita subir configuraciones personales o perfiles faciales reales.
-config/settings.toml
-profiles/
+# --- Archivos de configuración local ---
+/config/settings.toml
+/profiles/
 *.db
 *.sqlite
 
@@ -32,3 +28,5 @@ desktop.ini
 *.log
 temp/
 tree.txt
+
+.cargo/
